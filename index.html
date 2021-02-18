@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
     <!-- JQuery -->
-    <script src="js/jquery.min.js"></script>
-    
-    <title>Roche SFDC Dynamic Form</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+    <title>ICEGATE Dynamic Form</title>
 
     <style>
         label {
@@ -65,8 +66,8 @@
                 html = `
 <div class="mb-3">
     <label for="${name.replace(/\s/gim, '-')}">${displayName}:</label>
-    <input type="${inputType}" class="form-control" value="${value}" name="${name.replace(/\s/gim, '-')}" required ${disabled ? 'disabled' : ''}>
-</div>
+    <input id="${name}" type="${inputType}" class="form-control" value="${value}" name="${name.replace(/\s/gim, '-')}" required ${disabled ? 'disabled' : ''}>
+</div><br>
 `;
                 break;
 
@@ -74,7 +75,7 @@
                 html = `
 <div class="mb-3">
     <label for="${name.replace(/\s/gim, '-')}">${displayName}:</label>
-    <select class="form-control" name="${name.replace(/\s/gim, '-')}" required ${disabled ? 'disabled' : ''}>
+    <select class="form-control" id="${name}" name="${name.replace(/\s/gim, '-')}" required ${disabled ? 'disabled' : ''}>
         <option value="">Select</option>`;
                 value.forEach(item => {
                     if (selected && selected.includes(item.id)) {
@@ -87,7 +88,7 @@
                 });
                 html += `
     </select>
-</div>
+</div><br>
 `;
                 break;
 
@@ -95,7 +96,7 @@
                 html = `
 <div class="mb-3">
     <label for="${name.replace(/\s/gim, '-')}">${displayName}:</label>
-    <select multiple class="form-control" name="${name.replace(/\s/gim, '-')}" required ${disabled ? 'disabled' : ''}>`;
+    <select multiple class="form-control" id="${name}" name="${name.replace(/\s/gim, '-')}" required ${disabled ? 'disabled' : ''}>`;
                 value.forEach(item => {
                     if (selected && selected.includes(item.id)) {
                         html += `
@@ -107,7 +108,7 @@
                 });
                 html += `
     </select>
-</div>
+</div><br>
 `;
                 break;
 
@@ -115,8 +116,8 @@
                 html = `
 <div class="mb-3">
     <label for="${name.replace(/\s/gim, '-')}">${displayName}:</label>
-    <textarea class="form-control" name="${name.replace(/\s/gim, '-')}" rows="3" ${disabled ? 'disabled' : ''}>${value}</textarea>
-</div>
+    <textarea class="form-control" id="${name}" name="${name.replace(/\s/gim, '-')}" rows="3" ${disabled ? 'disabled' : ''}>${value}</textarea>
+</div><br>
 `;
                 break;
 
@@ -128,24 +129,24 @@
                     if (selected && selected.includes(item)) {
                         html += `
 <div class="form-check ">
-  <input class="form-check-input" type="radio" name="${name.replace(/\s/gim, '-')}" id="${name.replace(/\s/gim, '-') + index}" value="${item}" checked>
+  <input class="form-check-input" id="${name}" type="radio" name="${name.replace(/\s/gim, '-')}" id="${name.replace(/\s/gim, '-') + index}" value="${item}" checked>
   <label class="form-check-label" for="${name.replace(/\s/gim, '-') + index}">
     ${item}
   </label>
-</div>`;
+</div><br>`;
                     } else {
                         html += `
-<div class="form-check ">
-  <input class="form-check-input" type="radio" name="${name.replace(/\s/gim, '-')}" id="${name.replace(/\s/gim, '-') + index}" value="${item}">
+<div class="form-check">
+  <input class="form-check-input" id="${name}" type="radio" name="${name.replace(/\s/gim, '-')}" id="${name.replace(/\s/gim, '-') + index}" value="${item}">
   <label class="form-check-label" for="${name.replace(/\s/gim, '-') + index}">
     ${item}
   </label>
-</div>`;
+</div><br>`;
                     }
 
                 });
                 html += `
-</div>
+</div><br>
 `;
                 break;
 
@@ -157,19 +158,19 @@
                     if (selected && selected.includes(item)) {
                         html += `
 <div class="form-check ">
-  <input class="form-check-input" type="checkbox" name="${name.replace(/\s/gim, '-') + '_' + index}" id="${name.replace(/\s/gim, '-') + index}" value="${item}" checked>
+  <input class="form-check-input" id="${name}" type="checkbox" name="${name.replace(/\s/gim, '-') + '_' + index}" id="${name.replace(/\s/gim, '-') + index}" value="${item}" checked>
   <label class="form-check-label" for="${name.replace(/\s/gim, '-') + index}">
     ${item}
   </label>
-</div>`;
+</div><br>`;
                     } else {
                         html += `
-<div class="form-check ">
-  <input class="form-check-input" type="checkbox" name="${name.replace(/\s/gim, '-') + '_' + index}" id="${name.replace(/\s/gim, '-') + index}" value="${item}">
+<div class="form-check">
+  <input class="form-check-input" id="${name}" type="checkbox" name="${name.replace(/\s/gim, '-') + '_' + index}" id="${name.replace(/\s/gim, '-') + index}" value="${item}">
   <label class="form-check-label" for="${name.replace(/\s/gim, '-') + index}">
     ${item}
   </label>
-</div>`;
+</div><br>`;
                     }
 
                 });
@@ -195,6 +196,109 @@
 `;
     }
 
+    function validateUserInput(key, message) {
+        const alphaNum = /((^[0-9]+[a-z]+)|(^[a-z]+[0-9]+))+[0-9a-z]+$/gi;
+        const alpha = /^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/gi;
+        const numeric = /^\d+$/gi;
+
+        console.log(key, message)
+        switch (true) {
+            case ["pan_no", "mawb_no", "hawb_no", "gateway_igm_cgm_no", "local_igm_cgm_no"].includes(key): {
+                if (alphaNum.test(message)) {
+                    return true;
+                }
+                return false;
+            }
+            case ["vessel_no", "vessel_code"].includes(key): {
+                if (alphaNum.test(message) && message.length == 5) {
+                    return true;
+                }
+                return false;
+            }
+            case ["passport_no"].includes(key): {
+                if (alphaNum.test(message) && message.length == 10) {
+                    return true;
+                }
+                return false;
+            }
+            case ["container_no"].includes(key): {
+                if (alphaNum.test(message) && message.length == 11) {
+                    return true;
+                }
+                return false;
+            }
+            case ["gstin_no"].includes(key): {
+                if (alphaNum.test(message) && message.length == 15) {
+                    return true;
+                }
+                return false;
+            }
+            // case ["dsc_class"].includes(key): {
+            //     if (message.includes("class 3") || message.includes("3")) {
+            //         return true;
+            //     }
+            //     return false;
+            // }
+            // case ["location"].includes(key): {
+            //     if (alpha.test(message)) {
+            //         return true;
+            //     }
+            //     return false;
+            // }
+            case ["dsc_no", "local_egm_no", "igm_cgm_no"].includes(key): {
+                if (numeric.test(message)) {
+                    return true;
+                }
+                return false;
+            }
+            // case ["scroll_no"].includes(key): {
+            //     if (numeric.test(message) && message.length == 4) {
+            //         return true;
+            //     }
+            //     return false;
+            // }
+            case ["gateway_egm_no"].includes(key): {
+                if (numeric.test(message) && message.length == 6) {
+                    return true;
+                }
+                return false;
+            }
+            case ["doc_no", "sez_sb_no", "igm_no", "imo_no", "imo_code"].includes(key): {
+                if (numeric.test(message) && message.length == 7) {
+                    return true;
+                }
+                return false;
+            }
+            case ["sso_id", "hs_code"].includes(key): {
+                if (numeric.test(message) && message.length == 8) {
+                    return true;
+                }
+                return false;
+            }
+            case ["licence_no", "reg_contact_no", "contact_no"].includes(key): {
+                if (numeric.test(message) && message.length == 10) {
+                    return true;
+                }
+                return false;
+            }
+            case ["ad_no"].includes(key): {
+                if (numeric.test(message) && message.length == 8) {
+                    return true;
+                }
+                return false;
+            }
+            default: {
+                return true;
+            }
+        }
+    }
+
+    function highlightInvalid(key) {
+        document.getElementById(key).style.border = "1px solid red";
+        document.getElementById(key).style.backgroundColor = "#ffdddd";
+        document.getElementById(key).value = "";
+    }
+
     function addFormListner() {
         $('#submit').click((e) => {
 
@@ -203,7 +307,6 @@
 
             let data = $('#dynamicInputForm').find(':input');
             let keys = [];
-
             for (let i = 0; i < data.length - 1; i++) {
                 keys.push({
                     "name": data[i].name,
@@ -213,7 +316,7 @@
 
 
             let values = {};
-
+            let validity = {};
             for (let i = 0; i < keys.length; i++) {
                 let { type, name } = keys[i];
                 if (type == "radio" || type == "checkbox") {
@@ -222,7 +325,7 @@
                         mainKey = name.split('_').slice(0, -1).join('');
                         if (value && values[mainKey]) {
                             values[mainKey].push(value);
-                        } else if (value) {
+                        } else {
                             values[mainKey] = [value];
                         }
                     } else {
@@ -230,19 +333,29 @@
                     }
                 } else {
                     let value = $(`[name='${name}']`).val();
-                    if (value) {
-                        values[name] = value;
-                    }
+                    //if (value) {
+                    values[name] = value;
+                    validity[name] = validateUserInput(name, value)
+                    console.log(validity);
+                    //}
                 }
             }
 
-
+            if (Object.values(validity).includes(false)) {
+                document.getElementById('info').innerHTML = `<span style='color:red;'>Please fill valid details</span>`;
+                for (let key of Object.keys(validity)) {
+                    if (!validity[key]) {
+                        highlightInvalid(key);
+                    }
+                }
+                return;
+            }
             // let outputKeys = Object.keys(values);
 
             // let formStatus = formKeys.length === outputKeys.length && formKeys.every((value, index) => outputKeys.includes(value));
 
             console.log(values);
-            // if (formStatus) {
+            //if (formStatus) {
             window.parent.postMessage(
                 JSON.stringify({
                     event_code: 'ym-client-event',
@@ -283,1345 +396,30 @@
 
         let params = new URLSearchParams(document.location.search.substring(1));
         let inputJSON = params.get("data") ? params.get("data") : JSON.stringify({});
-        let botId = params.get("bot") ? params.get("bot") : "";
+        inputJSON = decodeURIComponent(inputJSON);
 
-        // console.log(inputJSON);
-        inputJSON = JSON.parse(inputJSON);
+        // document.getElementById('information').innerHTML = `Loading...`;
+        // document.getElementById('information').style.display = 'block';
+        let formElement = document.getElementById('dynamicInputForm');
+        let formData = JSON.parse(inputJSON);
+        let formKeys = Object.keys(formData);
+        if (!formKeys.length) {
+            document.getElementById('information').innerHTML = `<span style='color:red;'>No Input fields found.</span>`;
+            document.getElementById('information').style.display = 'block';
+            $('#custom').hide();
+            return;
+        }
 
-        document.getElementById('information').innerHTML = `Loading...`;
-        document.getElementById('information').style.display = 'block';
+        for (let i = 0; i < formKeys.length; i++) {
+            let key = formKeys[i];
+            let { fieldType, inputType, value, displayName, selected, disabled = false } = formData[key];
+            formElement.innerHTML += createInput(key, value, fieldType, inputType, displayName, selected, disabled);
+        }
 
-        $.ajax({
-            url: `https://app.yellowmessenger.com/api/data/functions/execute?bot=${botId}`,
-            method: "POST",
-            data: JSON.stringify(inputJSON),
+        formElement.innerHTML += getSubmitButton();
 
-            headers: {
-                "x-auth-token": "7ecdbbb2cd894a353da71028c85ac57bc4749f250d7866501f17629c221fde6a",
-                "Content-Type": "application/json"
-            },
-
-            success: (response) => {
-                document.getElementById('information').style.display = 'none';
-                console.log(response);
-                let formElement = document.getElementById('dynamicInputForm');
-                let formData = response.data;
-                let formKeys = Object.keys(formData);
-                // console.log(formData);
-                if (!formKeys.length) {
-                    document.getElementById('information').innerHTML = `<span style='color:red;'>No Input fields found.</span>`;
-                    document.getElementById('information').style.display = 'block';
-                    $('#custom').hide();
-                    return;
-                }
-
-                for (let i = 0; i < formKeys.length; i++) {
-                    let key = formKeys[i];
-                    let { fieldType, inputType, value, displayName, selected, disabled = false } = formData[key];
-                    formElement.innerHTML += createInput(key, value, fieldType, inputType, displayName, selected, disabled);
-                }
-
-                formElement.innerHTML += getSubmitButton();
-
-                addFormListner();
-            },
-            error: (error) => {
-
-                // document.getElementById('information').innerHTML = `<span style='color:red;'>No Input fields found}</span>`;
-                // document.getElementById('information').style.display = 'block';
-                // $('#custom').hide();
-                // return;
-
-                let input = {
-                    "user_id": {
-                        "displayName": "User Id",
-                        "value": "",
-                        "fieldType": "input",
-                        "inputType": "text",
-                        "selected": ""
-                    },
-                    "user_mail_id": {
-                        "displayName": "User Mail Id",
-                        "value": "",
-                        "fieldType": "input",
-                        "inputType": "email",
-                        "selected": ""
-                    },
-                    "user_manager_id": {
-                        "displayName": "User Manager Id",
-                        "value": "",
-                        "fieldType": "input",
-                        "inputType": "text",
-                        "selected": ""
-                    },
-                    "currency": {
-                        "displayName": "Currency",
-                        "value": [
-                            {
-                                "id": "ZAR",
-                                "value": "ZAR"
-                            },
-                            {
-                                "id": "XCD",
-                                "value": "XCD"
-                            },
-                            {
-                                "id": "VND",
-                                "value": "VND"
-                            },
-                            {
-                                "id": "VES",
-                                "value": "VES"
-                            },
-                            {
-                                "id": "VEF",
-                                "value": "VEF"
-                            },
-                            {
-                                "id": "UYU",
-                                "value": "UYU"
-                            },
-                            {
-                                "id": "USD",
-                                "value": "USD"
-                            },
-                            {
-                                "id": "TWD",
-                                "value": "TWD"
-                            },
-                            {
-                                "id": "TRY",
-                                "value": "TRY"
-                            },
-                            {
-                                "id": "THB",
-                                "value": "THB"
-                            },
-                            {
-                                "id": "SGD",
-                                "value": "SGD"
-                            },
-                            {
-                                "id": "SEK",
-                                "value": "SEK"
-                            },
-                            {
-                                "id": "SAR",
-                                "value": "SAR"
-                            },
-                            {
-                                "id": "RUB",
-                                "value": "RUB"
-                            },
-                            {
-                                "id": "RON",
-                                "value": "RON"
-                            },
-                            {
-                                "id": "PLN",
-                                "value": "PLN"
-                            },
-                            {
-                                "id": "PKR",
-                                "value": "PKR"
-                            },
-                            {
-                                "id": "PHP",
-                                "value": "PHP"
-                            },
-                            {
-                                "id": "PEN",
-                                "value": "PEN"
-                            },
-                            {
-                                "id": "NZD",
-                                "value": "NZD"
-                            },
-                            {
-                                "id": "NOK",
-                                "value": "NOK"
-                            },
-                            {
-                                "id": "MYR",
-                                "value": "MYR"
-                            },
-                            {
-                                "id": "MXN",
-                                "value": "MXN"
-                            },
-                            {
-                                "id": "MMK",
-                                "value": "MMK"
-                            },
-                            {
-                                "id": "KWD",
-                                "value": "KWD"
-                            },
-                            {
-                                "id": "KRW",
-                                "value": "KRW"
-                            },
-                            {
-                                "id": "JPY",
-                                "value": "JPY"
-                            },
-                            {
-                                "id": "IRR",
-                                "value": "IRR"
-                            },
-                            {
-                                "id": "INR",
-                                "value": "INR"
-                            },
-                            {
-                                "id": "IDR",
-                                "value": "IDR"
-                            },
-                            {
-                                "id": "HUF",
-                                "value": "HUF"
-                            },
-                            {
-                                "id": "HRK",
-                                "value": "HRK"
-                            },
-                            {
-                                "id": "HKD",
-                                "value": "HKD"
-                            },
-                            {
-                                "id": "GTQ",
-                                "value": "GTQ"
-                            },
-                            {
-                                "id": "GBP",
-                                "value": "GBP"
-                            },
-                            {
-                                "id": "EUR",
-                                "value": "EUR"
-                            },
-                            {
-                                "id": "EGP",
-                                "value": "EGP"
-                            },
-                            {
-                                "id": "DKK",
-                                "value": "DKK"
-                            },
-                            {
-                                "id": "CZK",
-                                "value": "CZK"
-                            },
-                            {
-                                "id": "COP",
-                                "value": "COP"
-                            },
-                            {
-                                "id": "CNY",
-                                "value": "CNY"
-                            },
-                            {
-                                "id": "CLP",
-                                "value": "CLP"
-                            },
-                            {
-                                "id": "CHF",
-                                "value": "CHF"
-                            },
-                            {
-                                "id": "CAD",
-                                "value": "CAD"
-                            },
-                            {
-                                "id": "BRL",
-                                "value": "BRL"
-                            },
-                            {
-                                "id": "AUD",
-                                "value": "AUD"
-                            },
-                            {
-                                "id": "ARS",
-                                "value": "ARS"
-                            },
-                            {
-                                "id": "AED",
-                                "value": "AED"
-                            }
-                        ],
-                        "fieldType": "select",
-                        "inputType": "text",
-                        "selected": []
-                    },
-                    "street": {
-                        "displayName": "Street",
-                        "value": "",
-                        "fieldType": "input",
-                        "inputType": "text",
-                        "selected": ""
-                    },
-                    "city": {
-                        "displayName": "City",
-                        "value": "",
-                        "fieldType": "input",
-                        "inputType": "text",
-                        "selected": ""
-                    },
-                    "country": {
-                        "displayName": "Country",
-                        "value": [
-                            {
-                                "id": "Iran",
-                                "value": "Iran"
-                            },
-                            {
-                                "id": "Indonesia",
-                                "value": "Indonesia"
-                            },
-                            {
-                                "id": "India",
-                                "value": "India"
-                            },
-                            {
-                                "id": "Palestinian Territories",
-                                "value": "Palestinian Territories"
-                            },
-                            {
-                                "id": "Palau",
-                                "value": "Palau"
-                            },
-                            {
-                                "id": "Pakistan",
-                                "value": "Pakistan"
-                            },
-                            {
-                                "id": "Oman",
-                                "value": "Oman"
-                            },
-                            {
-                                "id": "Norway",
-                                "value": "Norway"
-                            },
-                            {
-                                "id": "Northern Mariana Islands",
-                                "value": "Northern Mariana Islands"
-                            },
-                            {
-                                "id": "Niue",
-                                "value": "Niue"
-                            },
-                            {
-                                "id": "Iceland",
-                                "value": "Iceland"
-                            },
-                            {
-                                "id": "Hungary",
-                                "value": "Hungary"
-                            },
-                            {
-                                "id": "Holy See (Vatican City State)",
-                                "value": "Holy See (Vatican City State)"
-                            },
-                            {
-                                "id": "Guinea-Bissau",
-                                "value": "Guinea-Bissau"
-                            },
-                            {
-                                "id": "Guinea",
-                                "value": "Guinea"
-                            },
-                            {
-                                "id": "Nigeria",
-                                "value": "Nigeria"
-                            },
-                            {
-                                "id": "Niger",
-                                "value": "Niger"
-                            },
-                            {
-                                "id": "New Zealand",
-                                "value": "New Zealand"
-                            },
-                            {
-                                "id": "New Caledonia",
-                                "value": "New Caledonia"
-                            },
-                            {
-                                "id": "Netherlands",
-                                "value": "Netherlands"
-                            },
-                            {
-                                "id": "Nauru",
-                                "value": "Nauru"
-                            },
-                            {
-                                "id": "Cyprus",
-                                "value": "Cyprus"
-                            },
-                            {
-                                "id": "Croatia",
-                                "value": "Croatia"
-                            },
-                            {
-                                "id": "Cote D'Ivoire",
-                                "value": "Cote D'Ivoire"
-                            },
-                            {
-                                "id": "Costa Rica",
-                                "value": "Costa Rica"
-                            },
-                            {
-                                "id": "Cook Islands",
-                                "value": "Cook Islands"
-                            },
-                            {
-                                "id": "Congo Democratic Republic",
-                                "value": "Congo Democratic Republic"
-                            },
-                            {
-                                "id": "Congo Republic",
-                                "value": "Congo Republic"
-                            },
-                            {
-                                "id": "Colombia",
-                                "value": "Colombia"
-                            },
-                            {
-                                "id": "Guatemala",
-                                "value": "Guatemala"
-                            },
-                            {
-                                "id": "Guam",
-                                "value": "Guam"
-                            },
-                            {
-                                "id": "Greece",
-                                "value": "Greece"
-                            },
-                            {
-                                "id": "Ghana",
-                                "value": "Ghana"
-                            },
-                            {
-                                "id": "Germany",
-                                "value": "Germany"
-                            },
-                            {
-                                "id": "Algeria",
-                                "value": "Algeria"
-                            },
-                            {
-                                "id": "Albania",
-                                "value": "Albania"
-                            },
-                            {
-                                "id": "Ukraine",
-                                "value": "Ukraine"
-                            },
-                            {
-                                "id": "Uganda",
-                                "value": "Uganda"
-                            },
-                            {
-                                "id": "Tuvalu",
-                                "value": "Tuvalu"
-                            },
-                            {
-                                "id": "Turkey",
-                                "value": "Turkey"
-                            },
-                            {
-                                "id": "Gambia",
-                                "value": "Gambia"
-                            },
-                            {
-                                "id": "Gabon",
-                                "value": "Gabon"
-                            },
-                            {
-                                "id": "French Polynesia",
-                                "value": "French Polynesia"
-                            },
-                            {
-                                "id": "France",
-                                "value": "France"
-                            },
-                            {
-                                "id": "Finland",
-                                "value": "Finland"
-                            },
-                            {
-                                "id": "Fiji",
-                                "value": "Fiji"
-                            },
-                            {
-                                "id": "Tunisia",
-                                "value": "Tunisia"
-                            },
-                            {
-                                "id": "South Sudan",
-                                "value": "South Sudan"
-                            },
-                            {
-                                "id": "South Africa",
-                                "value": "South Africa"
-                            },
-                            {
-                                "id": "Solomon Islands",
-                                "value": "Solomon Islands"
-                            },
-                            {
-                                "id": "Slovenia",
-                                "value": "Slovenia"
-                            },
-                            {
-                                "id": "Slovakia",
-                                "value": "Slovakia"
-                            },
-                            {
-                                "id": "China",
-                                "value": "China"
-                            },
-                            {
-                                "id": "Chile",
-                                "value": "Chile"
-                            },
-                            {
-                                "id": "Namibia",
-                                "value": "Namibia"
-                            },
-                            {
-                                "id": "Mozambique",
-                                "value": "Mozambique"
-                            },
-                            {
-                                "id": "Morocco",
-                                "value": "Morocco"
-                            },
-                            {
-                                "id": "Montenegro",
-                                "value": "Montenegro"
-                            },
-                            {
-                                "id": "Ethiopia",
-                                "value": "Ethiopia"
-                            },
-                            {
-                                "id": "Estonia",
-                                "value": "Estonia"
-                            },
-                            {
-                                "id": "Eritrea",
-                                "value": "Eritrea"
-                            },
-                            {
-                                "id": "Equatorial Guinea",
-                                "value": "Equatorial Guinea"
-                            },
-                            {
-                                "id": "Chad",
-                                "value": "Chad"
-                            },
-                            {
-                                "id": "Central African Republic",
-                                "value": "Central African Republic"
-                            },
-                            {
-                                "id": "Cape Verde",
-                                "value": "Cape Verde"
-                            },
-                            {
-                                "id": "Canada",
-                                "value": "Canada"
-                            },
-                            {
-                                "id": "Cameroon",
-                                "value": "Cameroon"
-                            },
-                            {
-                                "id": "Singapore",
-                                "value": "Singapore"
-                            },
-                            {
-                                "id": "Sierra Leone",
-                                "value": "Sierra Leone"
-                            },
-                            {
-                                "id": "Seychelles",
-                                "value": "Seychelles"
-                            },
-                            {
-                                "id": "Serbia",
-                                "value": "Serbia"
-                            },
-                            {
-                                "id": "Egypt",
-                                "value": "Egypt"
-                            },
-                            {
-                                "id": "Ecuador",
-                                "value": "Ecuador"
-                            },
-                            {
-                                "id": "Djibouti",
-                                "value": "Djibouti"
-                            },
-                            {
-                                "id": "Denmark",
-                                "value": "Denmark"
-                            },
-                            {
-                                "id": "Czech Republic",
-                                "value": "Czech Republic"
-                            },
-                            {
-                                "id": "Senegal",
-                                "value": "Senegal"
-                            },
-                            {
-                                "id": "Cambodia",
-                                "value": "Cambodia"
-                            },
-                            {
-                                "id": "Burundi",
-                                "value": "Burundi"
-                            },
-                            {
-                                "id": "Burkina Faso",
-                                "value": "Burkina Faso"
-                            },
-                            {
-                                "id": "Bulgaria",
-                                "value": "Bulgaria"
-                            },
-                            {
-                                "id": "Brazil",
-                                "value": "Brazil"
-                            },
-                            {
-                                "id": "Botswana",
-                                "value": "Botswana"
-                            },
-                            {
-                                "id": "Saudi Arabia",
-                                "value": "Saudi Arabia"
-                            },
-                            {
-                                "id": "Sao Tome and Principe",
-                                "value": "Sao Tome and Principe"
-                            },
-                            {
-                                "id": "San Marino",
-                                "value": "San Marino"
-                            },
-                            {
-                                "id": "Western Samoa",
-                                "value": "Western Samoa"
-                            },
-                            {
-                                "id": "Mexico",
-                                "value": "Mexico"
-                            },
-                            {
-                                "id": "Benin",
-                                "value": "Benin"
-                            },
-                            {
-                                "id": "Belgium",
-                                "value": "Belgium"
-                            },
-                            {
-                                "id": "Belarus",
-                                "value": "Belarus"
-                            },
-                            {
-                                "id": "Bahrain",
-                                "value": "Bahrain"
-                            },
-                            {
-                                "id": "Rwanda",
-                                "value": "Rwanda"
-                            },
-                            {
-                                "id": "Russia",
-                                "value": "Russia"
-                            },
-                            {
-                                "id": "Mauritius",
-                                "value": "Mauritius"
-                            },
-                            {
-                                "id": "Mauritania",
-                                "value": "Mauritania"
-                            },
-                            {
-                                "id": "Marshall Islands",
-                                "value": "Marshall Islands"
-                            },
-                            {
-                                "id": "Malta",
-                                "value": "Malta"
-                            },
-                            {
-                                "id": "Mali",
-                                "value": "Mali"
-                            },
-                            {
-                                "id": "Maldives",
-                                "value": "Maldives"
-                            },
-                            {
-                                "id": "Malaysia",
-                                "value": "Malaysia"
-                            },
-                            {
-                                "id": "Malawi",
-                                "value": "Malawi"
-                            },
-                            {
-                                "id": "Romania",
-                                "value": "Romania"
-                            },
-                            {
-                                "id": "Qatar",
-                                "value": "Qatar"
-                            },
-                            {
-                                "id": "Portugal",
-                                "value": "Portugal"
-                            },
-                            {
-                                "id": "Poland",
-                                "value": "Poland"
-                            },
-                            {
-                                "id": "Austria",
-                                "value": "Austria"
-                            },
-                            {
-                                "id": "Madagascar",
-                                "value": "Madagascar"
-                            },
-                            {
-                                "id": "Macedonia",
-                                "value": "Macedonia"
-                            },
-                            {
-                                "id": "Luxembourg",
-                                "value": "Luxembourg"
-                            },
-                            {
-                                "id": "Lithuania",
-                                "value": "Lithuania"
-                            },
-                            {
-                                "id": "Liechtenstein",
-                                "value": "Liechtenstein"
-                            },
-                            {
-                                "id": "Libya",
-                                "value": "Libya"
-                            },
-                            {
-                                "id": "Liberia",
-                                "value": "Liberia"
-                            },
-                            {
-                                "id": "Lesotho",
-                                "value": "Lesotho"
-                            },
-                            {
-                                "id": "Lebanon",
-                                "value": "Lebanon"
-                            },
-                            {
-                                "id": "Latvia",
-                                "value": "Latvia"
-                            },
-                            {
-                                "id": "Australia",
-                                "value": "Australia"
-                            },
-                            {
-                                "id": "Armenia",
-                                "value": "Armenia"
-                            },
-                            {
-                                "id": "Philippines",
-                                "value": "Philippines"
-                            },
-                            {
-                                "id": "Peru",
-                                "value": "Peru"
-                            },
-                            {
-                                "id": "Papua New Guinea",
-                                "value": "Papua New Guinea"
-                            },
-                            {
-                                "id": "Panama",
-                                "value": "Panama"
-                            },
-                            {
-                                "id": "Laos",
-                                "value": "Laos"
-                            },
-                            {
-                                "id": "Kuwait",
-                                "value": "Kuwait"
-                            },
-                            {
-                                "id": "South Korea",
-                                "value": "South Korea"
-                            },
-                            {
-                                "id": "Kenya",
-                                "value": "Kenya"
-                            },
-                            {
-                                "id": "Jordan",
-                                "value": "Jordan"
-                            },
-                            {
-                                "id": "Japan",
-                                "value": "Japan"
-                            },
-                            {
-                                "id": "Italy",
-                                "value": "Italy"
-                            },
-                            {
-                                "id": "Israel",
-                                "value": "Israel"
-                            },
-                            {
-                                "id": "Ireland",
-                                "value": "Ireland"
-                            },
-                            {
-                                "id": "Iraq",
-                                "value": "Iraq"
-                            },
-                            {
-                                "id": "Macao",
-                                "value": "Macao"
-                            },
-                            {
-                                "id": "Hong Kong",
-                                "value": "Hong Kong"
-                            },
-                            {
-                                "id": "Sweden",
-                                "value": "Sweden"
-                            },
-                            {
-                                "id": "Swaziland",
-                                "value": "Swaziland"
-                            },
-                            {
-                                "id": "Sudan",
-                                "value": "Sudan"
-                            },
-                            {
-                                "id": "Spain",
-                                "value": "Spain"
-                            },
-                            {
-                                "id": "Angola",
-                                "value": "Angola"
-                            },
-                            {
-                                "id": "Andorra",
-                                "value": "Andorra"
-                            },
-                            {
-                                "id": "Argentina",
-                                "value": "Argentina"
-                            },
-                            {
-                                "id": "Mongolia",
-                                "value": "Mongolia"
-                            },
-                            {
-                                "id": "Monaco",
-                                "value": "Monaco"
-                            },
-                            {
-                                "id": "Moldova",
-                                "value": "Moldova"
-                            },
-                            {
-                                "id": "Micronesia",
-                                "value": "Micronesia"
-                            },
-                            {
-                                "id": "Zimbabwe",
-                                "value": "Zimbabwe"
-                            },
-                            {
-                                "id": "Zambia",
-                                "value": "Zambia"
-                            },
-                            {
-                                "id": "Yemen",
-                                "value": "Yemen"
-                            },
-                            {
-                                "id": "Western Sahara",
-                                "value": "Western Sahara"
-                            },
-                            {
-                                "id": "Wallis and Futuna",
-                                "value": "Wallis and Futuna"
-                            },
-                            {
-                                "id": "Tonga",
-                                "value": "Tonga"
-                            },
-                            {
-                                "id": "Togo",
-                                "value": "Togo"
-                            },
-                            {
-                                "id": "Thailand",
-                                "value": "Thailand"
-                            },
-                            {
-                                "id": "Tanzania",
-                                "value": "Tanzania"
-                            },
-                            {
-                                "id": "Venezuela",
-                                "value": "Venezuela"
-                            },
-                            {
-                                "id": "Vanuatu",
-                                "value": "Vanuatu"
-                            },
-                            {
-                                "id": "Uruguay",
-                                "value": "Uruguay"
-                            },
-                            {
-                                "id": "United States",
-                                "value": "United States"
-                            },
-                            {
-                                "id": "United Kingdom",
-                                "value": "United Kingdom"
-                            },
-                            {
-                                "id": "United Arab Emirates",
-                                "value": "United Arab Emirates"
-                            },
-                            {
-                                "id": "Syria",
-                                "value": "Syria"
-                            },
-                            {
-                                "id": "Switzerland",
-                                "value": "Switzerland"
-                            },
-                            {
-                                "id": "Saint Vincent and Grenadines",
-                                "value": "Saint Vincent and Grenadines"
-                            },
-                            {
-                                "id": "US Minor Outlying Islands",
-                                "value": "US Minor Outlying Islands"
-                            },
-                            {
-                                "id": "St Helena Ascension and T",
-                                "value": "St Helena Ascension and T"
-                            },
-                            {
-                                "id": "Korea Democratic People Republic",
-                                "value": "Korea Democratic People Republic"
-                            },
-                            {
-                                "id": "Bonaire Sint Eustatius and Saba",
-                                "value": "Bonaire Sint Eustatius and Saba"
-                            },
-                            {
-                                "id": "Taiwan",
-                                "value": "Taiwan"
-                            },
-                            {
-                                "id": "Vietnam",
-                                "value": "Vietnam"
-                            },
-                            {
-                                "id": "Barbados",
-                                "value": "Barbados"
-                            },
-                            {
-                                "id": "Bosnia and Herzegovina",
-                                "value": "Bosnia and Herzegovina"
-                            },
-                            {
-                                "id": "Azerbaijan",
-                                "value": "Azerbaijan"
-                            },
-                            {
-                                "id": "Aland Islands",
-                                "value": "Aland Islands"
-                            },
-                            {
-                                "id": "Aruba",
-                                "value": "Aruba"
-                            },
-                            {
-                                "id": "American Samoa",
-                                "value": "American Samoa"
-                            },
-                            {
-                                "id": "Antarctica",
-                                "value": "Antarctica"
-                            },
-                            {
-                                "id": "Anguilla",
-                                "value": "Anguilla"
-                            },
-                            {
-                                "id": "Antigua and Barbuda",
-                                "value": "Antigua and Barbuda"
-                            },
-                            {
-                                "id": "Afghanistan",
-                                "value": "Afghanistan"
-                            },
-                            {
-                                "id": "Belize",
-                                "value": "Belize"
-                            },
-                            {
-                                "id": "Bouvet Island",
-                                "value": "Bouvet Island"
-                            },
-                            {
-                                "id": "Bhutan",
-                                "value": "Bhutan"
-                            },
-                            {
-                                "id": "Bahamas",
-                                "value": "Bahamas"
-                            },
-                            {
-                                "id": "Bolivia",
-                                "value": "Bolivia"
-                            },
-                            {
-                                "id": "Brunei Darussalam",
-                                "value": "Brunei Darussalam"
-                            },
-                            {
-                                "id": "Bermuda",
-                                "value": "Bermuda"
-                            },
-                            {
-                                "id": "Saint Barthelemy",
-                                "value": "Saint Barthelemy"
-                            },
-                            {
-                                "id": "Bangladesh",
-                                "value": "Bangladesh"
-                            },
-                            {
-                                "id": "Saint Pierre and Miquelon",
-                                "value": "Saint Pierre and Miquelon"
-                            },
-                            {
-                                "id": "Netherlands Antilles",
-                                "value": "Netherlands Antilles"
-                            },
-                            {
-                                "id": "Nepal",
-                                "value": "Nepal"
-                            },
-                            {
-                                "id": "Nicaragua",
-                                "value": "Nicaragua"
-                            },
-                            {
-                                "id": "Norfolk Island",
-                                "value": "Norfolk Island"
-                            },
-                            {
-                                "id": "Montserrat",
-                                "value": "Montserrat"
-                            },
-                            {
-                                "id": "Martinique",
-                                "value": "Martinique"
-                            },
-                            {
-                                "id": "Myanmar",
-                                "value": "Myanmar"
-                            },
-                            {
-                                "id": "Saint Martin (French part)",
-                                "value": "Saint Martin (French part)"
-                            },
-                            {
-                                "id": "Sri Lanka",
-                                "value": "Sri Lanka"
-                            },
-                            {
-                                "id": "Saint Lucia",
-                                "value": "Saint Lucia"
-                            },
-                            {
-                                "id": "Kazakhstan",
-                                "value": "Kazakhstan"
-                            },
-                            {
-                                "id": "Cayman Islands",
-                                "value": "Cayman Islands"
-                            },
-                            {
-                                "id": "Saint Kitts and Nevis",
-                                "value": "Saint Kitts and Nevis"
-                            },
-                            {
-                                "id": "Comoros",
-                                "value": "Comoros"
-                            },
-                            {
-                                "id": "Kiribati",
-                                "value": "Kiribati"
-                            },
-                            {
-                                "id": "Kyrgyzstan",
-                                "value": "Kyrgyzstan"
-                            },
-                            {
-                                "id": "Jamaica",
-                                "value": "Jamaica"
-                            },
-                            {
-                                "id": "Jersey",
-                                "value": "Jersey"
-                            },
-                            {
-                                "id": "Georgia",
-                                "value": "Georgia"
-                            },
-                            {
-                                "id": "Grenada",
-                                "value": "Grenada"
-                            },
-                            {
-                                "id": "Faeroe Islands",
-                                "value": "Faeroe Islands"
-                            },
-                            {
-                                "id": "Falkland Islands (Malvinas)",
-                                "value": "Falkland Islands (Malvinas)"
-                            },
-                            {
-                                "id": "Dominican Republic",
-                                "value": "Dominican Republic"
-                            },
-                            {
-                                "id": "Dominica",
-                                "value": "Dominica"
-                            },
-                            {
-                                "id": "Christmas Island",
-                                "value": "Christmas Island"
-                            },
-                            {
-                                "id": "Curacao",
-                                "value": "Curacao"
-                            },
-                            {
-                                "id": "Cuba",
-                                "value": "Cuba"
-                            },
-                            {
-                                "id": "Cocos (Keeling) Islands",
-                                "value": "Cocos (Keeling) Islands"
-                            },
-                            {
-                                "id": "British Indian Ocean Territory",
-                                "value": "British Indian Ocean Territory"
-                            },
-                            {
-                                "id": "Isle of Man",
-                                "value": "Isle of Man"
-                            },
-                            {
-                                "id": "Haiti",
-                                "value": "Haiti"
-                            },
-                            {
-                                "id": "Honduras",
-                                "value": "Honduras"
-                            },
-                            {
-                                "id": "Guyana",
-                                "value": "Guyana"
-                            },
-                            {
-                                "id": "Guadeloupe",
-                                "value": "Guadeloupe"
-                            },
-                            {
-                                "id": "Greenland",
-                                "value": "Greenland"
-                            },
-                            {
-                                "id": "Gibraltar",
-                                "value": "Gibraltar"
-                            },
-                            {
-                                "id": "Guernsey",
-                                "value": "Guernsey"
-                            },
-                            {
-                                "id": "French Guiana",
-                                "value": "French Guiana"
-                            },
-                            {
-                                "id": "Uzbekistan",
-                                "value": "Uzbekistan"
-                            },
-                            {
-                                "id": "Trinidad and Tobago",
-                                "value": "Trinidad and Tobago"
-                            },
-                            {
-                                "id": "Turkmenistan",
-                                "value": "Turkmenistan"
-                            },
-                            {
-                                "id": "Timor-Leste",
-                                "value": "Timor-Leste"
-                            },
-                            {
-                                "id": "Tokelau",
-                                "value": "Tokelau"
-                            },
-                            {
-                                "id": "Tajikistan",
-                                "value": "Tajikistan"
-                            },
-                            {
-                                "id": "French Southern Territories",
-                                "value": "French Southern Territories"
-                            },
-                            {
-                                "id": "Turks and Caicos Islands",
-                                "value": "Turks and Caicos Islands"
-                            },
-                            {
-                                "id": "Sint Maarten",
-                                "value": "Sint Maarten"
-                            },
-                            {
-                                "id": "El Salvador",
-                                "value": "El Salvador"
-                            },
-                            {
-                                "id": "Suriname",
-                                "value": "Suriname"
-                            },
-                            {
-                                "id": "Somalia",
-                                "value": "Somalia"
-                            },
-                            {
-                                "id": "Svalbard and Jan Mayen",
-                                "value": "Svalbard and Jan Mayen"
-                            },
-                            {
-                                "id": "Reunion",
-                                "value": "Reunion"
-                            },
-                            {
-                                "id": "Paraguay",
-                                "value": "Paraguay"
-                            },
-                            {
-                                "id": "Puerto Rico",
-                                "value": "Puerto Rico"
-                            },
-                            {
-                                "id": "Pitcairn",
-                                "value": "Pitcairn"
-                            },
-                            {
-                                "id": "Mayotte",
-                                "value": "Mayotte"
-                            },
-                            {
-                                "id": "U.S. Virgin Islands",
-                                "value": "U.S. Virgin Islands"
-                            },
-                            {
-                                "id": "British Virgin Islands",
-                                "value": "British Virgin Islands"
-                            },
-                            {
-                                "id": "Kosovo",
-                                "value": "Kosovo"
-                            },
-                            {
-                                "id": "Middle East (Region)",
-                                "value": "Middle East (Region)"
-                            }
-                        ],
-                        "fieldType": "select",
-                        "inputType": "text",
-                        "selected": "Mayotte"
-                    },
-                    "postalcode": {
-                        "displayName": "Postalcode",
-                        "value": "",
-                        "fieldType": "input",
-                        "inputType": "text",
-                        "selected": ""
-                    },
-                    "description": {
-                        "displayName": "Description / Additional Comments",
-                        "fieldType": "textarea",
-                        "value": "REXIS SFDC - Assign existing functional Permission Set to User\n\nKindly assign the permission set 'SL133 - Manage price book' to the user 'Jamie Gillett'\n",
-                        "inputType": "",
-                        "disabled": true
-                    }
-                };
-                document.getElementById('information').style.display = 'none';
-                let formElement = document.getElementById('dynamicInputForm');
-
-                let formData = input;
-                let formKeys = Object.keys(formData);
-                // console.log(formData);
-                if (!formKeys.length) {
-                    document.getElementById('information').innerHTML = `<span style='color:red;'>No Input fields found.</span>`;
-                    document.getElementById('information').style.display = 'block';
-                    $('#custom').hide();
-                    return;
-                }
-
-                for (let i = 0; i < formKeys.length; i++) {
-                    let key = formKeys[i];
-                    let { fieldType, inputType, value, displayName, selected, disabled = false } = formData[key];
-                    formElement.innerHTML += createInput(key, value, fieldType, inputType, displayName, selected, disabled);
-                }
-
-                formElement.innerHTML += getSubmitButton();
-
-                addFormListner();
-
-            }
-        });
-
-
+        addFormListner();
     };
-
-
-
 </script>
 
 
